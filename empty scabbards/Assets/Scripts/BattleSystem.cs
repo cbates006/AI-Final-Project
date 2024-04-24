@@ -403,14 +403,18 @@ public class BattleSystem : MonoBehaviour
 
     void Player1Turn()
     {
-        dialogueText.text = "Player 1, choose an action:"; 
-
+        //dialogueText.text = "Player 1, choose an action:";
+        //the following code is for AI combat only. comment out to run player vs player combat as normal
+        dialogueText.text = "AI attacks!";
+        StartCoroutine(Wait());
+        StartCoroutine(Player1Attack());
     }
 
 
     void Player2Turn()
     {
         dialogueText.text = "Player 2, choose an action:";
+        
     }
 
     IEnumerator EndBattle()
@@ -424,6 +428,12 @@ public class BattleSystem : MonoBehaviour
         }
         yield return new WaitForSeconds(5f);
         SceneManager.LoadScene("Credits");
+    }
+
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(5f);
+        Debug.Log("waiting");
     }
 
     public void OnAttackButton()
