@@ -104,11 +104,11 @@ public class BattleSystem : MonoBehaviour
                 {
                     player2Unit.TakeDamage(damage);
                     player2HUD.SetHP(player2Unit.currentHP);
-                    dialogueText.text = "Hits for " + damage + " damage!";
+                    dialogueText.text = "AI attacks for " + damage + " damage!";
                 }
                 else
                 {
-                    dialogueText.text = "The attack missed!";
+                    dialogueText.text = "AI's attack missed!";
                 }
                 Debug.Log("attackroll = " + attackRoll);
                 Debug.Log("roll2 = " + roll2);
@@ -120,11 +120,11 @@ public class BattleSystem : MonoBehaviour
                 {
                     player2Unit.TakeDamage(damage);
                     player2HUD.SetHP(player2Unit.currentHP);
-                    dialogueText.text = "Hits for " + damage + " damage!";
+                    dialogueText.text = "AI attacks for " + damage + " damage!";
                 }
                 else
                 {
-                    dialogueText.text = "The attack missed!";
+                    dialogueText.text = "AI's attack missed!";
                 }
                 Debug.Log("attackroll = " + attackRoll);
                 Debug.Log("roll2 = " + roll2);
@@ -136,11 +136,11 @@ public class BattleSystem : MonoBehaviour
                 {
                     player2Unit.TakeDamage(damage);
                     player2HUD.SetHP(player2Unit.currentHP);
-                    dialogueText.text = "Hits for " + damage + " damage!";
+                    dialogueText.text = "AI attacks for " + damage + " damage!";
                 }
                 else
                 {
-                    dialogueText.text = "The attack missed!";
+                    dialogueText.text = "AI's attack missed!";
                 }
                 Debug.Log("attackroll = " + attackRoll);
                 Debug.Log("roll2 = " + roll2);
@@ -153,11 +153,11 @@ public class BattleSystem : MonoBehaviour
                 {
                     player2Unit.TakeDamage(damage);
                     player2HUD.SetHP(player2Unit.currentHP);
-                    dialogueText.text = "Hits for " + damage + " damage!";
+                    dialogueText.text = "AI attacks for " + damage + " damage!";
                 }
                 else
                 {
-                    dialogueText.text = "The attack missed!";
+                    dialogueText.text = "AI's attack missed!";
                 }
                 state3 = BattleState3.NOTRECKLESS2;
                 Debug.Log("attackroll = " + attackRoll);
@@ -172,11 +172,11 @@ public class BattleSystem : MonoBehaviour
                 {
                     player2Unit.TakeDamage(damage);
                     player2HUD.SetHP(player2Unit.currentHP);
-                    dialogueText.text = "Hits for " + damage + " damage!";
+                    dialogueText.text = "AI reckless for " + damage + " damage!";
                 }
                 else
                 {
-                    dialogueText.text = "The attack missed!";
+                    dialogueText.text = "AI's reckless attack missed!";
                 }
                 state2 = BattleState2.DODGENOTACTIVE;
                 Debug.Log("attackroll = " + attackRoll);
@@ -188,11 +188,11 @@ public class BattleSystem : MonoBehaviour
                 {
                     player2Unit.TakeDamage(damage);
                     player2HUD.SetHP(player2Unit.currentHP);
-                    dialogueText.text = "Hits for " + damage + " damage!";
+                    dialogueText.text = "AI reckless for " + damage + " damage!";
                 }
                 else
                 {
-                    dialogueText.text = "The attack missed!";
+                    dialogueText.text = "AI reckless for " + damage + " damage!";
                 }
                 Debug.Log("attackroll = " + attackRoll);
                 Debug.Log("roll2 = " + roll2);
@@ -360,6 +360,24 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    IEnumerator Player1Dodge()
+    {
+        state2 = BattleState2.DODGEACTIVE;
+        dialogueText.text = "AI dodged!";
+        yield return new WaitForSeconds(3f);
+        state = BattleState.PLAYER2TURN;
+        Player2Turn();
+        
+    }
+
+    IEnumerator Player2Dodge()
+    {
+        dialogueText.text = "Player 2 dodged!";
+        yield return new WaitForSeconds(3f);
+        state = BattleState.PLAYER1TURN;
+        Player1Turn();
+    }
+
     IEnumerator Player1Heal()
     {
         int heal = Random.Range(1, 11);
@@ -378,6 +396,7 @@ public class BattleSystem : MonoBehaviour
             state = BattleState.PLAYER2TURN;
             Player2Turn();
         }
+        state2 = BattleState2.DODGENOTACTIVE;
     }
 
     IEnumerator Player2Heal()
@@ -399,41 +418,185 @@ public class BattleSystem : MonoBehaviour
             state = BattleState.PLAYER1TURN;
             Player1Turn();
         }
+        state2 = BattleState2.DODGENOTACTIVE;
     }
 
     void Player1Turn()
     {
         //dialogueText.text = "Player 1, choose an action:";
         //the following code is for AI combat only. comment out to run player vs player combat as normal
-        dialogueText.text = "AI attacks!";
-        StartCoroutine(Wait());
-        StartCoroutine(Player1Attack());
+
+        /*
+        if (player1Unit.currentHP >= 10)
+        {
+            StartCoroutine(Player1Attack());
+        }
+        else
+        {
+            StartCoroutine(Player1Heal());
+        } */
+
+        //did opponent reckless attack?
+        if (state3 == BattleState3.RECKLESS2) //yes
+        {
+            //is my health <= 10?
+            if (player1Unit.currentHP <= 10) //yes
+            {
+                //is my opponent's health <= 10?
+                if (player2Unit.currentHP <= 10) //yes
+                {
+                    StartCoroutine(Player1Attack());
+                }
+                else //no
+                {
+                    int percentRoll1 = Random.Range(1, 101);
+                     if (percentRoll1 <= 30)
+                    {
+                        StartCoroutine(Player1Heal());
+                    }
+                     else if (percentRoll1 > 30 && percentRoll1 <= 80)
+                    {
+                        StartCoroutine(Player1Attack());
+                    }
+                     else
+                    {
+                        StartCoroutine(Player1Dodge());
+                    }
+                }
+            }
+            else //no
+            {
+                StartCoroutine(Player1Attack());
+            }
+        }
+        else //no
+        {
+            //did opponent dodge?
+            if (state2 == BattleState2.DODGEACTIVE) //yes
+            {
+                //is my health <= 15?
+                if (player1Unit.currentHP <= 15) //yes
+                {
+                    //is my opponent's health <= 10?
+                    if (player2Unit.currentHP <= 10) //yes
+                    {
+                        int percentRoll2 = Random.Range(1, 101);
+                        if (percentRoll2 <= 25)
+                        {
+                            state4 = BattleState4.RECKLESS1;
+                            StartCoroutine(Player1Attack());
+                        }
+                        else if (percentRoll2 > 25 && percentRoll2 <= 50)
+                        {
+                            StartCoroutine(Player1Attack());
+                        }
+                        else if (percentRoll2 >50 && percentRoll2 <= 85)
+                        {
+                            StartCoroutine(Player1Heal());
+                        }
+                        else
+                        {
+                            StartCoroutine(Player1Dodge());
+                        }
+                    }
+                    else //no
+                    {
+                        int percentRoll3 = Random.Range(1, 101);
+                        if (percentRoll3 <= 75)
+                        {
+                            StartCoroutine(Player1Heal());
+                        }
+                        else
+                        {
+                            StartCoroutine(Player1Dodge());
+                        }
+                    }
+                }
+                else //no
+                {
+                    state4 = BattleState4.RECKLESS1;
+                    StartCoroutine(Player1Attack());
+                }
+            }
+            else //no
+            {
+                //is my health <= 10?
+                if (player1Unit.currentHP <= 10) //yes
+                {
+                    //is my opponent's health <= 10?
+                    if (player2Unit.currentHP <= 10) //yes
+                    {
+                        int percentRoll4 = Random.Range(1, 101);
+                        if (percentRoll4 <= 40)
+                        {
+                            StartCoroutine(Player1Attack());
+                        }
+                        else if (percentRoll4 > 40 && percentRoll4 <= 70)
+                        {
+                            StartCoroutine(Player1Heal());
+                        }
+                        else
+                        {
+                            state4 = BattleState4.RECKLESS1;
+                            StartCoroutine(Player1Attack());
+                        }
+                    }
+                    else //no
+                    {
+                        int percentRoll5 = Random.Range(1, 101);
+                        if (percentRoll5 <= 70)
+                        {
+                            StartCoroutine(Player1Heal());
+                        }
+                        else
+                        {
+                            StartCoroutine(Player1Dodge());
+                        }
+                    }
+                }
+                else //no
+                {
+                    //is my opponent's health <= 10?
+                    if (player2Unit.currentHP <= 10) //yes
+                    {
+                        int percentRoll6 = Random.Range(1, 101);
+                        if (percentRoll6 <= 70)
+                        {
+                            state4 = BattleState4.RECKLESS1;
+                            StartCoroutine(Player1Attack());
+                        }
+                        else
+                        {
+                            StartCoroutine(Player1Attack());
+                        }
+                    }
+                    else //no
+                    {
+                        StartCoroutine(Player1Attack());
+                    }
+                }
+            }
+        }
+
     }
 
 
     void Player2Turn()
     {
         dialogueText.text = "Player 2, choose an action:";
-        
     }
 
     IEnumerator EndBattle()
     {
         if(state == BattleState.PLAYER1WON)
         {
-            dialogueText.text = "Player 1 wins!";
+            dialogueText.text = "AI wins!";
         }else if(state == BattleState.PLAYER2WON)
         {
             dialogueText.text = "Player 2 wins!";
         }
         yield return new WaitForSeconds(5f);
         SceneManager.LoadScene("Credits");
-    }
-
-    IEnumerator Wait()
-    {
-        yield return new WaitForSeconds(5f);
-        Debug.Log("waiting");
     }
 
     public void OnAttackButton()
@@ -473,15 +636,13 @@ public class BattleSystem : MonoBehaviour
         state2 = BattleState2.DODGEACTIVE;
         if (state == BattleState.PLAYER1TURN)
         {
-            state = BattleState.PLAYER2TURN;
-            Player2Turn();
+            StartCoroutine(Player1Dodge());
         }
         else if (state == BattleState.PLAYER2TURN)
         {
-            
-            state = BattleState.PLAYER1TURN;
-            Player1Turn();
-            
+
+            StartCoroutine(Player2Dodge());
+
         }
         else
         {
