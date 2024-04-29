@@ -25,5 +25,9 @@ public class Unit : MonoBehaviour
     public void Heal(int health)
     {
         currentHP += health;
+        if(currentHP > 30)
+        {
+            currentHP = 30;
+        }
     }
 }

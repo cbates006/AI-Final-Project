@@ -10,11 +10,11 @@ public class ModeScript : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.Keypad1))
+        if (Input.GetKey(KeyCode.Alpha1))
         {
             SceneManager.LoadScene("Arena");
         }
-        else if (Input.GetKey(KeyCode.Keypad2))
+        else if (Input.GetKey(KeyCode.Alpha2))
         {
             SceneManager.LoadScene("Arena AI");
         }

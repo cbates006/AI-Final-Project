@@ -1,6 +1,10 @@
 # unity-3d-starter
 
-A basic unity turn-based combat game that includes two players, a number of different actions the players can take to defeat their opponent, and a HUD displaying the player's actions and HP. The game functions off of random number generation to decide who goes first and how succesful each of their actions is. It also includes a music track and a title and end credits that display at the beginning and end of the game.
+A basic unity turn-based combat game that includes two players, a number of different actions the players can take to defeat their opponent, and a HUD displaying the player's actions and HP. The game functions off of random number generation to decide who goes first and how succesful each of their actions is. It also includes a music track and a title and end credits that display at the beginning and end of the game. 
+
+As of the updated version, it has an AI combatent that can be battled.
+
+NOTE: Due to scripting errors, this current version of the game only allows battle against an AI opponent. This will be fixed in a future version, but for now if you select Player vs Player, Player1 will still run the autonamous action script. 
 
 ## Scenes
 
@@ -9,6 +13,7 @@ The project includes 4 scenes:
 - Main.unity contains a scene with a quad acting as the ground and a 1st person character with a simple controller. The game ends when the player falls from the quad, loading ...
 - Credits.unity loads when the game finishes. Pressing any key exits the application.
 - Arena.unity contains the bulk of the game itself. It is the arena in which the two player characters are loaded and also contains the UI required to play the game. The game ends when one of the players reduces their opponent to zero HP.
+- ArenaAI.unity is a version of the above that loads the AI combatent
 
 ## Scripts
 
@@ -19,7 +24,8 @@ The game includes 7 C# scripts:
 - Quit.cs detects a keypress and quits the application. It is attached to the Credits scene Main camera.
 - BattleSystem.cs creates the game states and most of the functions used in the game. It is attached to an empty object in the arena file during the game and requires the BattleHUD objects, player prefabs, and dialogue box text objects to be attached to it.
 - BattleHUD.cs sets the player names and HP on the HUDs at the start of the game.
-- Unit.cs contians the functions for the players taking damage and checking to see if a player has died and the game is over.
+- Unit.cs contains the functions for the players taking damage and checking to see if a player has died and the game is over.
+- ChooseMode.cs allows the player to select the mode they would like to play
 
 ## Building and Playing
 

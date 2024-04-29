@@ -391,7 +391,7 @@ public class BattleSystem : MonoBehaviour
         else { 
             player1Unit.Heal(heal);
             player1HUD.SetHP(player1Unit.currentHP);
-            dialogueText.text = "Player 1 healed " + heal + " HP!";
+            dialogueText.text = "AI healed " + heal + " HP!";
             yield return new WaitForSeconds(3f);
             state = BattleState.PLAYER2TURN;
             Player2Turn();
@@ -425,16 +425,6 @@ public class BattleSystem : MonoBehaviour
     {
         //dialogueText.text = "Player 1, choose an action:";
         //the following code is for AI combat only. comment out to run player vs player combat as normal
-
-        /*
-        if (player1Unit.currentHP >= 10)
-        {
-            StartCoroutine(Player1Attack());
-        }
-        else
-        {
-            StartCoroutine(Player1Heal());
-        } */
 
         //did opponent reckless attack?
         if (state3 == BattleState3.RECKLESS2) //yes
@@ -603,7 +593,7 @@ public class BattleSystem : MonoBehaviour
     {
         if (state == BattleState.PLAYER1TURN)
         {
-            StartCoroutine(Player1Attack());
+            //StartCoroutine(Player1Attack());
         }
         else if (state == BattleState.PLAYER2TURN)
         {
@@ -619,7 +609,7 @@ public class BattleSystem : MonoBehaviour
     {
         if (state == BattleState.PLAYER1TURN)
         {
-            StartCoroutine(Player1Heal());
+            //StartCoroutine(Player1Heal());
         }
         else if (state == BattleState.PLAYER2TURN)
         {
@@ -636,7 +626,7 @@ public class BattleSystem : MonoBehaviour
         state2 = BattleState2.DODGEACTIVE;
         if (state == BattleState.PLAYER1TURN)
         {
-            StartCoroutine(Player1Dodge());
+            //StartCoroutine(Player1Dodge());
         }
         else if (state == BattleState.PLAYER2TURN)
         {
@@ -654,8 +644,8 @@ public class BattleSystem : MonoBehaviour
     {
         if (state == BattleState.PLAYER1TURN)
         {
-            state4 = BattleState4.RECKLESS1;
-            StartCoroutine(Player1Attack());
+            //state4 = BattleState4.RECKLESS1;
+            //StartCoroutine(Player1Attack());
         }
         else if (state == BattleState.PLAYER2TURN)
         {
